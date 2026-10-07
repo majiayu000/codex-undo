@@ -1,0 +1,16 @@
+{
+  "client": "codex-cli 0.160.0",
+  "actual_codex_turns": 1,
+  "deletion_undo_redo": true,
+  "last_turn_undo_redo": true,
+  "turns": [
+    {
+      "turn": 1,
+      "seconds": 55.61,
+      "version": 1,
+      "recorded": true
+    }
+  ],
+  "status": "Session <recorded-session> | 1 turns | 8839 bytes\nCoverage is partial; status cannot detect hooks that never ran.\nGAP: coverage limited to recorded hook events; fork ancestry unavailable from SessionStart payload\nGAP: shell/MCP/opaque tool: workspace-external edits and uncaptured new-file absence cannot be inferred\nOutstanding tools: 0\nLast restore complete=true safety=eae78b27c4bcd49b21aa2235b53ef85aefddd45829ad6d7dccd47bd210533001; redo available\nLatest checkpoint objects verified.\n",
+  "list": "Session <recorded-session> <scratch>/workspace gaps=2\n1 1791385328 In this isolated test, delete only notes.txt using shell, th files=3\n"
+}

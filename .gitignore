@@ -1,0 +1,4 @@
+/target/
+/evidence-private/
+/dist/*.tar.gz
+/dist/SHA256SUMS
