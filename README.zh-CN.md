@@ -20,7 +20,7 @@ cargo install --locked --path .
 codex-undo install
 ```
 
-重启或恢复 Codex，打开 **`/hooks`**，检查并信任新增 hook。执行第一轮后运行
+重启或恢复 Codex CLI，打开 **`/hooks`**，检查并信任新增 hook。执行第一轮后运行
 `codex-undo status`，核实检查点确实被记录。安装器保留现有 remem、vibeguard
 及其他 hook，修改前保存原始文件的精确备份；不会修改信任或审批设置。
 GitHub Release、crates.io 和 Homebrew 尚未发布；仓库附有待审查的分发 workflow

@@ -57,15 +57,18 @@ sanitized captures were extracted.
 **Not verified:** actual desktop app hook execution, terminal `!` frontend
 shortcut, double-Esc ordering, or desktop plugin loading. The bundled CLI version
 `0.160.1` is inventory only. A fresh desktop project/plugin hook needs review and
-trust through `/hooks`; see [official hook trust documentation](https://learn.chatgpt.com/docs/hooks).
+trust through CLI `/hooks`; the Desktop same-name command entry is unverified.
+See [official hook trust documentation](https://learn.chatgpt.com/docs/hooks).
 The saved desktop project available here is the shared `tool` parent. Installing
 its project hook would affect unrelated parallel chats, so it was not done.
 A private isolated scratch project and minimal recorder were prepared for human
-review/trust via `/hooks`, with a bounded deletion/apply_patch/parallel/child probe.
+review/trust via CLI `/hooks`, with a bounded deletion/apply_patch/parallel/child probe.
 It has not run; the exact local directory and commands are in the coordinator
 handoff, outside this published source. Required desktop action: open that
-project, review/trust only its eight recorder definitions, and send the bounded
-prompt in a fresh Desktop chat. No fake desktop
+project in CLI (`codex -C <scratch>`), review/trust only its eight recorder
+definitions via CLI `/hooks`, and exit. Keep any CLI recorder entries separately;
+then open that exact project and send the bounded prompt in a fresh Desktop
+chat. CLI trust review does not prove Desktop hook loading or execution. No fake desktop
 source flag or UI classification is used as evidence.
 
 ## Real file restoration (M2–M3)

@@ -18,7 +18,7 @@ cargo install --locked --path .
 codex-undo install
 ```
 
-Restart/resume Codex, open **`/hooks`**, review and trust the new definitions.
+Restart/resume the Codex CLI, open **`/hooks`**, review and trust the new definitions.
 After the first turn, run `codex-undo status` to verify it recorded a checkpoint.
 The installer preserves other hook registrations and makes an exact original-file
 backup. The command does not change Codex trust or approval settings.
