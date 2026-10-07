@@ -1,0 +1,89 @@
+{
+  "description": "Requires codex-undo binary on PATH; review and trust in /hooks. Desktop plugin loading remains unverified.",
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "codex-undo hook SessionStart",
+            "timeout": 10,
+            "statusMessage": "codex-undo: recording checkpoint"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "codex-undo hook UserPromptSubmit",
+            "timeout": 10,
+            "statusMessage": "codex-undo: recording checkpoint"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "codex-undo hook PreToolUse",
+            "timeout": 10,
+            "statusMessage": "codex-undo: recording checkpoint"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "codex-undo hook PostToolUse",
+            "timeout": 10,
+            "statusMessage": "codex-undo: recording checkpoint"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "codex-undo hook Stop",
+            "timeout": 10,
+            "statusMessage": "codex-undo: recording checkpoint"
+          }
+        ]
+      }
+    ],
+    "Interrupt": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "codex-undo hook Interrupt",
+            "timeout": 3,
+            "statusMessage": "codex-undo: recording checkpoint"
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "codex-undo hook SubagentStop",
+            "timeout": 10,
+            "statusMessage": "codex-undo: recording checkpoint"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "signal_sent_while_tool_active": true,
+  "interrupt_hook_observed": true,
+  "events": [
+    "SessionStart",
+    "UserPromptSubmit",
+    "PreToolUse",
+    "Interrupt"
+  ]
+}

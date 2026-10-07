@@ -1,0 +1,18 @@
+[
+  {
+    "command": "codex exec 'Delete notes.txt using shell'",
+    "output": "Real Codex tool: [\"/bin/zsh -lc 'rm -- notes.txt'\", \"/bin/zsh -lc 'cat version.txt'\", '/bin/zsh -lc \\'test ! -e notes.txt && test \"$(cat version.txt)\" = 1 && test \"$(cat new.txt)\" = new\\'']\nnotes.txt is absent (verified on disk)."
+  },
+  {
+    "command": "codex-undo undo --yes",
+    "output": "DELETE <scratch>/workspace/new.txt\nCREATE <scratch>/workspace/notes.txt\nRESTORE <scratch>/workspace/version.txt\n3 file(s); missing target entries are left untouched.\nRestored 3 file(s). Use redo to return to the safety snapshot. Conversation unchanged; use Codex's conversation fork UI separately. Turn numbers here are local checkpoint numbers, not menu indices.\n"
+  },
+  {
+    "command": "cat notes.txt",
+    "output": "untracked note before Codex\n"
+  },
+  {
+    "command": "codex-undo redo --yes",
+    "output": "CREATE <scratch>/workspace/new.txt\nDELETE <scratch>/workspace/notes.txt\nRESTORE <scratch>/workspace/version.txt\n3 file(s); missing target entries are left untouched.\nRestored 3 file(s). Use redo to return to the safety snapshot. Conversation unchanged; use Codex's conversation fork UI separately. Turn numbers here are local checkpoint numbers, not menu indices.\n"
+  }
+]

@@ -1,0 +1,61 @@
+name: build draft release
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Reviewed tag matching Cargo.toml (v0.1.0-beta.1)'
+        required: true
+        default: v0.1.0-beta.1
+permissions:
+  contents: read
+jobs:
+  build:
+    strategy:
+      matrix:
+        include:
+          - os: macos-latest
+            target: aarch64-apple-darwin
+          - os: macos-latest
+            target: x86_64-apple-darwin
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+          - os: ubuntu-24.04-arm
+            target: aarch64-unknown-linux-gnu
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+      - run: cargo build --release --locked --target ${{ matrix.target }}
+      - name: Package executable
+        run: |
+          mkdir artifact
+          cp target/${{ matrix.target }}/release/codex-undo artifact/
+          cp LICENSE README.md artifact/
+          tar -czf codex-undo-${{ matrix.target }}.tar.gz -C artifact .
+      - uses: actions/upload-artifact@v4
+        with:
+          name: codex-undo-${{ matrix.target }}
+          path: codex-undo-${{ matrix.target }}.tar.gz
+  draft:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          merge-multiple: true
+      - name: Create reviewable draft (never publish automatically)
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ inputs.tag }}
+        run: |
+          version=$(sed -n 's/^version = "\(.*\)"/\1/p' Cargo.toml | head -n 1)
+          test "$RELEASE_TAG" = "v$version"
+          cd artifacts
+          sha256sum *.tar.gz > SHA256SUMS
+          gh release create "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --draft --prerelease --title "codex-undo $RELEASE_TAG" --notes-file ../docs/RELEASE.md *.tar.gz SHA256SUMS

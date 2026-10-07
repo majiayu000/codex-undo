@@ -1,0 +1,33 @@
+{
+  "rustc": "1.97.0 (2d8144b78 2026-07-07)",
+  "platforms": {
+    "aarch64-apple-darwin": {
+      "binary_sha256": "746f3ba6894fe20b3adeabd8f09331e06e709604cd3c556dd04a3034b4871fdd",
+      "file_identification": "Mach-O 64-bit executable arm64",
+      "version": "0.1.0-beta.1",
+      "executed_version_check": true,
+      "archive_sha256": "f98a216ece2463f6d0cec1ef812545330223e6799fbca5223a7e1ecee14c9531"
+    },
+    "aarch64-unknown-linux-gnu": {
+      "binary_sha256": "6c8cc116f396f3e30b531028f87d95dfb167a8674c76925ac1df3f1d4236d50f",
+      "file_identification": "ELF 64-bit LSB pie executable, ARM aarch64, version 1 (SYSV), dynamically linked, interpreter /lib/ld-linux-aarch64.so.1, BuildID[sha1]=ae11a0a9752e77f1ba151abaecb23894203776a1, for GNU/Linux 3.7.0, stripped",
+      "version": "0.1.0-beta.1",
+      "executed_version_check": true,
+      "archive_sha256": "13cae1a90f42d4d7a80aaf0a7431ea38fdf8eff81b2059804bf068e137f4ca24"
+    },
+    "x86_64-apple-darwin": {
+      "binary_sha256": "835ba3376dcbc4bac692c69e117d9953be542e68ffe56f0cf6fa49ddffd4b25a",
+      "file_identification": "Mach-O 64-bit executable x86_64",
+      "version": "0.1.0-beta.1",
+      "executed_version_check": true,
+      "archive_sha256": "b56b8f153751458631557d8b8da16f734a909b2490aa252ca0c30def184cc4c9"
+    },
+    "x86_64-unknown-linux-gnu": {
+      "binary_sha256": "7e831849e5d924755152a2525ca17b4ed41b77cd8067d22cec4037642b5f3e63",
+      "file_identification": "ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 3.2.0, BuildID[sha1]=6d696449f5bc5b824e0a50ae157bc21d2efa3582, stripped",
+      "version": "0.1.0-beta.1",
+      "executed_version_check": true,
+      "archive_sha256": "624a6b2258b0a073d36b5100e748702c4cdfc498995d232812032523e9eeb42e"
+    }
+  }
+}

@@ -1,0 +1,5 @@
+{
+  "sigkill_during_blob_capture": true,
+  "sigkill_during_restore_redo_all_50_files": true,
+  "post_crash_gc_and_integrity": true
+}

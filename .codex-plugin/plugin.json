@@ -1,0 +1,8 @@
+{
+  "name": "codex-undo",
+  "version": "0.1.0-beta.1",
+  "description": "Local workspace file checkpoints. Install the Rust binary before enabling hooks.",
+  "author": {"name": "majiayu000"},
+  "license": "MIT",
+  "repository": "https://github.com/majiayu000/codex-undo"
+}

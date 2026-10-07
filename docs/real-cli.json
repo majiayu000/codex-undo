@@ -1,0 +1,70 @@
+{
+  "client": "codex-cli 0.160.0",
+  "actual_codex_turns": 10,
+  "deletion_undo_redo": true,
+  "last_turn_undo_redo": true,
+  "turns": [
+    {
+      "turn": 1,
+      "seconds": 71.02,
+      "version": 1,
+      "recorded": true
+    },
+    {
+      "turn": 2,
+      "seconds": 64.87,
+      "version": 2,
+      "recorded": true
+    },
+    {
+      "turn": 3,
+      "seconds": 43.49,
+      "version": 3,
+      "recorded": true
+    },
+    {
+      "turn": 4,
+      "seconds": 54.97,
+      "version": 4,
+      "recorded": true
+    },
+    {
+      "turn": 5,
+      "seconds": 100.96,
+      "version": 5,
+      "recorded": true
+    },
+    {
+      "turn": 6,
+      "seconds": 51.22,
+      "version": 6,
+      "recorded": true
+    },
+    {
+      "turn": 7,
+      "seconds": 32.29,
+      "version": 7,
+      "recorded": true
+    },
+    {
+      "turn": 8,
+      "seconds": 38.27,
+      "version": 8,
+      "recorded": true
+    },
+    {
+      "turn": 9,
+      "seconds": 48.78,
+      "version": 9,
+      "recorded": true
+    },
+    {
+      "turn": 10,
+      "seconds": 57.31,
+      "version": 10,
+      "recorded": true
+    }
+  ],
+  "status": "Session <recorded-session> | 10 turns | 29584 bytes\nCoverage is partial; status cannot detect hooks that never ran.\nGAP: coverage limited to recorded hook events; fork ancestry unavailable from SessionStart payload\nGAP: shell/MCP/opaque tool: workspace-external edits and uncaptured new-file absence cannot be inferred\nOutstanding tools: 0\nLast restore complete=true safety=048bf130b1f8b10a52bcbf29f73bc17d698e59266e4b95a34e66b01cef16ac3f; redo available\nLatest checkpoint objects verified.\n",
+  "list": "Session <recorded-session> <scratch>/workspace gaps=2\n10 1791384079 Use apply_patch to set version.txt to exactly 10 followed by files=1\n9 1791384022 Use apply_patch to set version.txt to exactly 9 followed by  files=1\n8 1791383990 Use apply_patch to set version.txt to exactly 8 followed by  files=1\n7 1791383953 Use apply_patch to set version.txt to exactly 7 followed by  files=1\n6 1791383916 Use apply_patch to set version.txt to exactly 6 followed by  files=1\n5 1791383815 Use apply_patch to set version.txt to exactly 5 followed by  files=1\n4 1791383746 Use apply_patch to set version.txt to exactly 4 followed by  files=1\n3 1791383710 Use apply_patch to set version.txt to exactly 3 followed by  files=1\n2 1791383645 Use apply_patch to set version.txt to exactly 2 followed by  files=1\n1 1791383584 In this isolated test, delete only notes.txt using shell, th files=3\n"
+}

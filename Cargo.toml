@@ -1,0 +1,31 @@
+[package]
+name = "codex-undo"
+version = "0.1.0-beta.1"
+edition = "2024"
+rust-version = "1.97"
+license = "MIT"
+description = "Local file checkpoints and safe restore for official Codex hooks"
+repository = "https://github.com/majiayu000/codex-undo"
+readme = "README.md"
+exclude = ["evidence-private/**", "dist/*.tar.gz", "dist/SHA256SUMS"]
+
+[dependencies]
+anyhow = "1"
+blake3 = "1"
+clap = { version = "4", features = ["derive"] }
+fs2 = "0.4"
+gix-index = { version = "0.55", features = ["sha1"] }
+gix-hash = { version = "0.26", features = ["sha1"] }
+ignore = "0.4"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+similar = "3"
+tempfile = "3"
+walkdir = "2"
+
+[dev-dependencies]
+proptest = "1"
+
+[profile.release]
+lto = "thin"
+strip = true
