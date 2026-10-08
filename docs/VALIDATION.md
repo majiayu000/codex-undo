@@ -1,8 +1,10 @@
-# Validation record — 2026-10-07
+# Validation record — 2026-10-07, supplemented 2026-10-08
 
-This is a beta candidate. M1–M3 have implemented behavior with local evidence;
-M0 desktop acceptance and parts of M4 distribution/filesystem acceptance remain
-open. Production publication and merge have not been performed.
+This is a beta candidate. M1–M3 have implemented behavior with local and hosted
+filesystem evidence. M0 desktop acceptance, the M4 100k full-checkpoint performance
+target and production publication remain open. The implementation was merged in
+`dc83ed90f4e137d1f1de48ac75bd996d132ad78d`; the filesystem CI addition is tracked
+in [PR #2](https://github.com/majiayu000/codex-undo/pull/2).
 
 ## Real official client evidence (M0)
 
@@ -126,6 +128,28 @@ unavailable test environment, not a claim that codex-undo fails on those filesys
 Native Linux, APFS and cross-architecture executables are reported separately
 from remote CI.
 
+**Hosted ext4/btrfs supplement — 2026-10-08:** the normal checks workflow's
+`linux-filesystems` job completed successfully in
+[run 37667499940](https://github.com/majiayu000/codex-undo/actions/runs/37667499940).
+It formatted only newly created ordinary 4 GiB image files, then mounted each
+sequentially on `/dev/loop0`. `findmnt` reported actual `ext4` and `btrfs` types;
+`TMPDIR` and the test/benchmark workspace and store were inside each mount.
+Each filesystem passed all **28 tests** (2 recovery, 5 CLI entry, 21 correctness,
+including 64 randomized operation sequences), and each reported original exit 0
+and cleanup exit 0. Images were unmounted, checked for remaining loop attachments
+and removed. No host disk was formatted, and no overlay fallback was used.
+
+The standard Ubuntu 24.04 x64 VM used image `20260927.320.1`, kernel
+`6.17.0-1022-azure` and Rust `1.99.0`. The actual PR merge checkout was
+`78901b89c2d1a05eba72ee4efb9676ab4e3294d2`, whose tree
+`5652c8be2703a404c2e2163d70acfc3ccdd71d46` matches PR head
+`74524c7070a830897122112a31a8e2f54d53548f`. The measured release executable's
+SHA-256 was `2ce4eb8fdd08b89b2fb3604412534cfeb56d929e89b4cae519af1874231f4c19`.
+[Artifact 11503424859](https://github.com/majiayu000/codex-undo/actions/runs/37667499940/artifacts/11503424859)
+contains both complete mount/correctness/cleanup logs and all four raw benchmark
+JSON files. This hosted result supplements, rather than replaces, the failed
+local Docker environment probe.
+
 ## Performance (M4)
 
 Subprocess wall-clock timings include hook startup, journal replay, checkpoint and
@@ -156,8 +180,26 @@ separate from the warm steady-state target. Final 100k cold scan is **7390.22 ms
 full maximum **2560.17 ms**. The 100k full target remains exceeded;
 the implemented >2-second warning advises narrowing `.codexundoignore`. No claim
 of 100k performance acceptance. Read-only Git metadata checks passed.
-Linux ext4/btrfs timing remains separate acceptance. File content is copied
-and hashed; reflink optimization is not implemented.
+File content is copied and hashed; reflink optimization is not implemented.
+
+Hosted Linux measurements used the unchanged benchmark with 20 samples per
+fixture and filesystem. All raw samples, maxima, cold timings and byte-identical
+Git metadata checks are retained in the artifact above. The specification's
+10k warm targets are incremental p95 <150 ms and full p95 <500 ms; the 100k
+target is p95 <2 seconds.
+
+| Hosted x64 fixture | Incremental p95 | Full p95 | Cold full | Result |
+|---|---:|---:|---:|---|
+| ext4 10k | 85.76 ms | 272.17 ms | 598.44 ms | Warm targets passed |
+| btrfs 10k | 87.55 ms | 270.89 ms | 527.02 ms | Warm targets passed |
+| ext4 100k | 1002.20 ms | 3209.08 ms | 5652.60 ms | Full target exceeded |
+| btrfs 100k | 996.46 ms | 3218.40 ms | 5654.76 ms | Full target exceeded |
+
+Full maxima were 277.54/290.94 ms for ext4/btrfs 10k and 3269.72/3224.29 ms
+for 100k. The existing >2-second checkpoint warning remains implemented.
+A successful filesystem job proves mounts, correctness, completed measurements
+and cleanup; it does not assert that the performance targets passed. These are
+loop-backed filesystems on a hosted VM, not bare-metal disk measurements.
 
 Evidence: [initial 10k](benchmark-10000.json),
 [second 10k](benchmark-10000-optimized.json),
@@ -188,18 +230,19 @@ Evidence: [initial 10k](benchmark-10000.json),
   before an accessible source repository and reviewed formula exist.
 - crates.io publish, Homebrew tap merge, production GitHub Release, social posts
   and issue replies have **not** occurred.
-- GitHub plugin has valid majiayu000 write access to existing repositories, but
+- At the initial 2026-10-07 local record, the GitHub plugin had valid majiayu000 write access to existing repositories, but
   `majiayu000/codex-undo` returned 404 and the available tools do not expose
   repository creation. CLI credential was invalid. No account was switched.
-  Repository creation is awaiting the coordinator's authorized path.
-- CI definitions are prepared. **No remote CI run is claimed** until repository,
-  branch, workflow permissions and an actual completed run exist.
+  The repository has since been created and the implementation merged as
+  recorded above. The hosted filesystem job is now backed by an actual
+  completed run; the earlier local Docker runs remain separate evidence.
 
 ## Final status
 
 Local implementation, platform checks, crash recovery, source installation,
 package verification and four-architecture distribution preparation are complete.
 M0 Desktop review/trust and actual runtime evidence are still required. M4 100k
-full-checkpoint latency exceeds 2 seconds, ext4/btrfs timing lacks a test
-environment, and remote repository/PR/CI/publication remain unavailable.
-Production publication and merge remain for review. No social/issue message sent.
+full-checkpoint latency exceeds 2 seconds on macOS, ext4 and btrfs. Actual hosted
+ext4/btrfs correctness and timing are now covered; the filesystem CI addition
+remains in PR #2 for review. Production publication remains open.
+No social/issue message sent.

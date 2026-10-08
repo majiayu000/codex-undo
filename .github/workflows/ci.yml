@@ -26,3 +26,109 @@ jobs:
           python-version: '3.12'
       - run: pip install jsonschema==4.26.0
       - run: python scripts/check-protocol.py
+  linux-filesystems:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Build and install filesystem tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y e2fsprogs btrfs-progs
+          cargo build --release --locked
+      - name: Test and measure actual ext4 and btrfs mounts
+        shell: bash
+        run: |
+          set -euo pipefail
+          evidence="$RUNNER_TEMP/codex-undo-filesystems-evidence"
+          mkdir -p "$evidence"
+          {
+            git rev-parse HEAD
+            uname -a
+            printf 'runner_image=%s version=%s\n' "${ImageOS:-unknown}" "${ImageVersion:-unknown}"
+            rustc --version
+            sha256sum target/release/codex-undo
+            df -h "$RUNNER_TEMP"
+          } > "$evidence/environment.txt"
+          result=0
+          for fs in ext4 btrfs; do
+            set +e
+            (
+              set -euo pipefail
+              scratch=$(mktemp -d "$RUNNER_TEMP/codex-undo-$fs.XXXXXX")
+              image="$scratch/image.img"
+              mount_dir="$scratch/mount"
+              # Invoked indirectly by the EXIT trap.
+              # shellcheck disable=SC2329
+              cleanup() {
+                original_status=$?
+                trap - EXIT
+                set +e
+                cleanup_status=0
+                printf 'original_exit=%s\n' "$original_status"
+                if mountpoint -q "$mount_dir"; then
+                  sudo umount "$mount_dir"
+                  cleanup_status=$?
+                  if [ "$cleanup_status" -ne 0 ]; then
+                    printf 'cleanup failed: unmount exit=%s; image retained\n' "$cleanup_status" >&2
+                  fi
+                fi
+                if [ "$cleanup_status" -eq 0 ]; then
+                  remaining_loop=$(sudo losetup -j "$image")
+                  cleanup_status=$?
+                  if [ -n "$remaining_loop" ]; then
+                    printf 'cleanup failed: image still attached: %s\n' "$remaining_loop" >&2
+                    cleanup_status=1
+                  fi
+                fi
+                if [ "$cleanup_status" -eq 0 ]; then
+                  rm -f "$image" && rmdir "$mount_dir" "$scratch"
+                  cleanup_status=$?
+                fi
+                printf 'cleanup_exit=%s\n' "$cleanup_status"
+                if [ "$original_status" -ne 0 ]; then
+                  exit "$original_status"
+                fi
+                exit "$cleanup_status"
+              }
+              trap 'cleanup' EXIT
+              mkdir "$mount_dir"
+              # mkfs receives only this newly created ordinary image file.
+              (set -o noclobber; : > "$image")
+              truncate -s 4G "$image"
+              if [ "$fs" = ext4 ]; then
+                mkfs.ext4 -F "$image"
+              else
+                mkfs.btrfs -f "$image"
+              fi
+              sudo mount -t "$fs" -o loop,nodev,nosuid "$image" "$mount_dir"
+              sudo chown "$(id -u):$(id -g)" "$mount_dir"
+              export TMPDIR="$mount_dir/tmp"
+              mkdir "$TMPDIR"
+              findmnt -n -o TARGET,SOURCE,FSTYPE,OPTIONS --target "$TMPDIR"
+              actual_fs=$(findmnt -n -o FSTYPE --target "$TMPDIR")
+              printf 'expected_fs=%s actual_fs=%s\n' "$fs" "$actual_fs"
+              test "$actual_fs" = "$fs"
+              stat -f -c 'statfs_type=%T block_size=%S' "$TMPDIR"
+              python3 -c 'import os,tempfile; p=os.path.realpath(tempfile.gettempdir()); print("tempfile_root="+p); assert p == os.path.realpath(os.environ["TMPDIR"])'
+              cargo test --locked
+              python3 scripts/benchmark.py target/release/codex-undo --files 10000 --samples 20 > "$evidence/$fs-10000.json"
+              python3 scripts/benchmark.py target/release/codex-undo --files 100000 --samples 20 > "$evidence/$fs-100000.json"
+            ) > "$evidence/$fs.log" 2>&1
+            fs_status=$?
+            set -e
+            printf '%s exit=%s\n' "$fs" "$fs_status" | tee -a "$evidence/results.txt"
+            if [ "$fs_status" -ne 0 ]; then
+              result=$fs_status
+            fi
+          done
+          cat "$evidence/results.txt"
+          exit "$result"
+      - name: Save correctness, mount and raw performance evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-filesystems-${{ github.sha }}
+          path: ${{ runner.temp }}/codex-undo-filesystems-evidence
+          if-no-files-found: warn
